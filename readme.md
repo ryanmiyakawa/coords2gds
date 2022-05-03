@@ -7,7 +7,11 @@
   @copyright Copyright (c) 2022
   
   ### Usage
-  ./text2gds input.csv output.gds
+  ./text2gds <input.csv> <output.gds>
+
+
+  ## Sample 
+  ./text2gds test.txt output.gds
   
   ## Notes
   Reads a comma separated description of polygons and writes to GDS.  
