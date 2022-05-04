@@ -203,7 +203,7 @@ int main(int argc, char **argv)
     char* line = NULL;
     size_t len = 0;
 
-    int coords[256];
+    int coords[512];
     int tokenCount = 0;
     int coordCount = 0;
     int lineCount = 0;
