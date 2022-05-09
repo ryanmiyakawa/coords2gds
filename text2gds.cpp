@@ -172,7 +172,7 @@ int main(int argc, char **argv)
         // system("PAUSE");
         // return 0;
 
-        inFile =  (char *) "gratingwriter_hologram_220506a.csv";
+        inFile =  (char *) "gratingwriter_hologram_220508b.csv";
         outFile =   (char *) "out.gds";
     } else {
         inFile = argv[1];
@@ -205,7 +205,7 @@ int main(int argc, char **argv)
     char* line = NULL;
     size_t len = 0;
 
-    int coords[512];
+    int coords[1024];
     int tokenCount = 0;
     int coordCount = 0;
     int lineCount = 0;
@@ -227,6 +227,10 @@ int main(int argc, char **argv)
             tokenCount++;
 
             token = strtok(NULL, ",");
+
+            if (tokenCount > 512){
+                break;
+            }
         }
 
         // Add a final set of coordinates to close the boundary:
@@ -237,9 +241,23 @@ int main(int argc, char **argv)
 
         if (tokenCount % 2 != 0){
             printf("ERROR: line %d does not have an even number of coordinates\n", lineCount);
+            fclose(fp);
+            if (line)
+                free(line);
+
             return 0;
         } else {
-            // printf("Writing shape %d with %d coordinates\n", lineCount, tokenCount/2);
+            printf("Writing shape %d with %d coordinates\n", lineCount, tokenCount/2);
+        }
+
+        if (tokenCount > 512){
+            printf("ERROR: Shape %d has %d coordinates. MAX = 256\n", lineCount, tokenCount/2);
+
+            fclose(fp);
+            if (line)
+                free(line);
+
+            return 0;
         }
 
         // printf("Boundary %d has %d coordinate pairs (vertices)\n", lineCount, tokenCount/2);
@@ -263,13 +281,6 @@ int main(int argc, char **argv)
 
     printf("Shape translation finished in %0.3fs\n", elapsed_secs);
     printf("Successfully wrote %d shapes to %s!!\n", lineCount, outFile);
-
-
-
-
-
-    
-
 
     return 0;
 }
