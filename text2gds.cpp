@@ -163,8 +163,15 @@ void exportPolygon(int *coords, unsigned char *polyPre, unsigned char *polyPost,
 int main(int argc, char **argv)
 {
     clock_t begin = clock();
+
+    char **argv_test;
+    argv_test = argv + 1;
+    
     char *inFile = argv[1];
     char *outFile = argv[2];
+    char *flag = argv[3];
+
+    bool echoCounts = false;
 
     if (argc < 3)
     {
@@ -177,7 +184,13 @@ int main(int argc, char **argv)
     } else {
         inFile = argv[1];
         outFile = argv[2];
+    }
 
+
+    // Echo flag
+    char echoFlag[] = "-echoCoords";
+    if (argc == 4 && strcmp(flag, echoFlag) == 0){
+        echoCounts = true;
     }
 
 
@@ -247,7 +260,9 @@ int main(int argc, char **argv)
 
             return 0;
         } else {
-            printf("Writing shape %d with %d coordinates\n", lineCount, tokenCount/2);
+            if (echoCounts){
+                printf("Writing shape %d with %d coordinates\n", lineCount, tokenCount/2);
+            }
         }
 
         if (tokenCount > 512){
