@@ -75,12 +75,13 @@ void initGDS(FILE *outputFile, unsigned char *gdsPost, unsigned char *polyPre, u
  * @param tokenCount 
  */
 void getPolyForm(unsigned char *polyForm, int tokenCount){
-     const int polyBlockFormat[4] = {0, 4 + 4*tokenCount, 16, 3};
+    const int byteCt = 4 + 4*tokenCount;
+     const int polyBlockFormat[4] = {byteCt >> 8, byteCt & 255, 16, 3};
      for (int k = 0; k < 4; k++)
         polyForm[k] = (unsigned char)polyBlockFormat[k];
 }
 
-/**
+/** 
  * @brief Encodes a 32-bit integer
  * 
  * @param aCoord 
@@ -167,11 +168,12 @@ int main(int argc, char **argv)
 
     if (argc < 3)
     {
-        printf("Please specify inputfile and output file! \n");
-        system("PAUSE");
-        return 0;
+        // printf("Please specify inputfile and output file! \n");
+        // system("PAUSE");
+        // return 0;
 
-        // inFile = "test.txt";
+        inFile =  (char *) "gratingwriter_hologram_220506a.csv";
+        outFile =   (char *) "out.gds";
     } else {
         inFile = argv[1];
         outFile = argv[2];
@@ -190,7 +192,7 @@ int main(int argc, char **argv)
     const int layerNumber = 0;
     
     // Populate ambles
-    if ((outputFile = fopen(strcat(outFile, ""), "wb")) == NULL)
+    if ((outputFile = fopen(outFile, "wb")) == NULL)
         printf("Cannot open file.\n");
     initGDS(outputFile, gdsPost, polyPre, polyPost, layerNumber);
 
@@ -236,6 +238,8 @@ int main(int argc, char **argv)
         if (tokenCount % 2 != 0){
             printf("ERROR: line %d does not have an even number of coordinates\n", lineCount);
             return 0;
+        } else {
+            // printf("Writing shape %d with %d coordinates\n", lineCount, tokenCount/2);
         }
 
         // printf("Boundary %d has %d coordinate pairs (vertices)\n", lineCount, tokenCount/2);
